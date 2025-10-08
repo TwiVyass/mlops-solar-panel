@@ -1,0 +1,50 @@
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+*.log
+*.tmp
+
+# ---- Virtual Environments ----
+venv/
+env/
+.venv/
+Lib/
+Scripts/
+share/
+pyvenv.cfg
+
+# ---- Data and Results ----
+data/raw/
+data/processed/
+data/interim/
+results/
+models/
+*.zip
+*.tar
+*.tar.gz
+
+# ---- DVC ----
+!.dvc
+!.dvcignore
+# Allow DVC metadata but ignore large data files tracked by DVC
+*.dvc
+.cache/
+.dvc/cache/
+
+# ---- IDE / OS ----
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ---- AWS / Secrets ----
+*.pem
+*.key
+.env
+credentials.json

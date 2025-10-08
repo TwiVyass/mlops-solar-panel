@@ -1,0 +1,18 @@
+stages:
+  analyze_damage:
+    cmd: python scripts/analyze_damage.py
+    deps:
+      - scripts/analyze_damage.py
+      - models/autoencoder_model.h5
+      - data/major_damage
+    outs:
+      - results/major_minor_scores.json
+
+  evaluate_threshold:
+    cmd: python scripts/evaluate_threshold.py
+    deps:
+      - scripts/evaluate_threshold.py
+      - results/major_minor_scores.json
+    outs:
+      - results/metrics/threshold_eval.json
+      - results/figures

@@ -1,0 +1,12 @@
+data:
+  raw: data/raw
+  processed: data/processed
+
+model:
+  path: models/autoencoder_model.h5
+  input_shape: [128, 128, 1]
+  epochs: 20
+  batch_size: 32
+
+squiggliness:
+  threshold: 10.0
