@@ -1,4 +1,6 @@
 # ---- Python ----
+!.dvc
+!.dvcignore
 __pycache__/
 *.pyc
 *.pyo
