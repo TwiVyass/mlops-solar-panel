@@ -1,25 +1,24 @@
-!.dvc
-!.dvcignore
+# -------------------
+# Python Bytecode
+# -------------------
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.so
-*.egg-info/
-*.egg
-*.log
-*.tmp
 
-# ---- Virtual Environments ----
+# -------------------
+# Virtual Environments
+# -------------------
 venv/
 env/
 .venv/
 Lib/
 Scripts/
-share/
 pyvenv.cfg
 
-# ---- Data and Results ----
+# -------------------
+# Data and Results
+# -------------------
 data/raw/
 data/processed/
 data/interim/
@@ -29,22 +28,35 @@ models/
 *.tar
 *.tar.gz
 
-# ---- DVC ----
-!.dvc
-!.dvcignore
-# Allow DVC metadata but ignore large data files tracked by DVC
-*.dvc
-.cache/
-.dvc/cache/
+# -------------------
+# DVC
+# -------------------
+# Allow DVC folder and ignore large tracked files
+# DVC
+.dvc/          # track the DVC folder itself
+!.dvcignore    # track the ignore rules file
+*.dvc          # ignore DVC-tracked data files
+.cache/        # ignore DVC cache
 
-# ---- IDE / OS ----
+
+# -------------------
+# IDE / OS
+# -------------------
 .idea/
 .vscode/
 *.iml
 .DS_Store
 Thumbs.db
 
-# ---- AWS / Secrets ----
+# -------------------
+# Logs / Temp Files
+# -------------------
+*.log
+*.tmp
+
+# -------------------
+# AWS / Secrets
+# -------------------
 *.pem
 *.key
 .env
