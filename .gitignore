@@ -1,4 +1,3 @@
-# ---- Python ----
 !.dvc
 !.dvcignore
 __pycache__/
