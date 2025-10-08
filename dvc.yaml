@@ -1,17 +1,17 @@
 stages:
   analyze_damage:
-    cmd: python scripts/analyze_damage.py
+    cmd: python script/analyze_damage.py
     deps:
-      - scripts/analyze_damage.py
+      - script/analyze_damage.py
       - models/autoencoder_model.h5
-      - data/major_damage
+      - data/raw/Faulty_solar_panel/Physical-Damage
     outs:
       - results/major_minor_scores.json
 
   evaluate_threshold:
-    cmd: python scripts/evaluate_threshold.py
+    cmd: python script/evaluate_threshold.py
     deps:
-      - scripts/evaluate_threshold.py
+      - script/evaluate_threshold.py
       - results/major_minor_scores.json
     outs:
       - results/metrics/threshold_eval.json

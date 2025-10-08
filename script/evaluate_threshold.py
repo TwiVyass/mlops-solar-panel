@@ -1,8 +1,12 @@
 import json
+import os
 import matplotlib.pyplot as plt
 from scipy import stats
 
 def evaluate_threshold(major_scores, minor_scores, alpha=0.05, save_dir="results"):
+    os.makedirs(f"{save_dir}/metrics", exist_ok=True)
+    os.makedirs(f"{save_dir}/figures", exist_ok=True)
+
     if len(major_scores) < 2 or len(minor_scores) < 2:
         print("❌ Not enough data points for t-test.")
         return

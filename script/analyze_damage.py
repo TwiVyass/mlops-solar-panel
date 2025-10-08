@@ -1,30 +1,48 @@
-import os
+import tensorflow as tf
 import cv2
-from scripts.utils import load_autoencoder, preprocess_image
-from scripts.calculate_squiggliness import calculate_damage_score
+import numpy as np
+import glob
+from scipy import stats
+import os
 
-def analyze_damaged_images(damaged_folder, threshold=10000):
-    autoencoder = load_autoencoder()
-    major_scores, minor_scores = [], []
+# Load trained model
+autoencoder = tf.keras.models.load_model(
+    "models/autoencoder_model.h5",
+    custom_objects={"mse": tf.keras.losses.MeanSquaredError()}
+)
 
-    for root, _, files in os.walk(damaged_folder):
-        for filename in files:
-            img_path = os.path.join(root, filename)
-            img_input = preprocess_image(img_path)
-            if img_input is None:
-                continue
+# Path to damaged images
+damaged_folder = "data/raw/Faulty_solar_panel/Physical-Damage"
 
-            reconstructed = autoencoder.predict(img_input, verbose=0)[0]
-            reconstructed = (reconstructed * 255).astype('uint8')
-            _, thresh = cv2.threshold(reconstructed, 127, 255, cv2.THRESH_BINARY)
-            contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+def calculate_damage_score(contours):
+    if not contours:
+        return 0
+    squiggliness_score = 0
+    for contour in contours:
+        area = cv2.contourArea(contour)
+        perimeter = cv2.arcLength(contour, True)
+        if area > 10:
+            squiggliness_score += perimeter / area
+    return squiggliness_score
 
-            score = calculate_damage_score(contours)
-            (major_scores if score > threshold else minor_scores).append(score)
+def process_image_with_autoencoder(img_path):
+    img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        return None
+    img_resized = cv2.resize(img, (128, 128)) / 255.0
+    img_input = np.expand_dims(img_resized, axis=(0, -1))
+    reconstructed = autoencoder.predict(img_input, verbose=0)[0]
+    reconstructed = (reconstructed * 255).astype(np.uint8)
+    _, thresh = cv2.threshold(reconstructed, 127, 255, cv2.THRESH_BINARY)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    return calculate_damage_score(contours)
 
-    return major_scores, minor_scores
+# Analyze damaged images
+scores = []
+for img_path in glob.glob(os.path.join(damaged_folder, "*.jpg")):
+    score = process_image_with_autoencoder(img_path)
+    if score is not None:
+        scores.append(score)
 
-if __name__ == "__main__":
-    folder = "data/major_damage"
-    major, minor = analyze_damaged_images(folder)
-    print(f"Processed {len(major)+len(minor)} images.")
+print(f"✅ Processed {len(scores)} images.")
+print("Average squiggliness score:", np.mean(scores))
