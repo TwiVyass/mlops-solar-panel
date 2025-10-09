@@ -5,14 +5,18 @@ stages:
       - script/analyze_damage.py
       - models/autoencoder_model.h5
       - data/raw/Faulty_solar_panel/Physical-Damage
+    params:
+      - data
+      - training
+      - squiggliness
     outs:
-      - results/major_minor_scores.json
+      - results/metrics/squiggliness_output/major_minor_scores.json
 
   evaluate_threshold:
     cmd: python script/evaluate_threshold.py
     deps:
       - script/evaluate_threshold.py
-      - results/major_minor_scores.json
+      - results/metrics/squiggliness_output/major_minor_scores.json
     outs:
       - results/metrics/threshold_eval.json
       - results/figures

@@ -1,4 +1,6 @@
 data:
+  input_folder: "data/raw/Faulty_solar_panel/Physical-Damage"     # or your input test images folder
+  output_folder: "results/metrics/squiggliness_output"  # where processed images will be saved
   raw_dir: data/raw/Faulty_solar_panel
   processed_dir: data/processed
   train_split: 0.8
@@ -13,5 +15,7 @@ training:
   model_output: models/solar_model.h5
 
 squiggliness:
+  threshold: 1.5      # tweak this depending on how strict you want it
+  area_min: 100
   threshold_major: 0.65
   threshold_minor: 0.45

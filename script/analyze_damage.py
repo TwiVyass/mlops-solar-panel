@@ -5,6 +5,8 @@ import glob
 from scipy import stats
 import os
 
+
+
 # Load trained model
 autoencoder = tf.keras.models.load_model(
     "models/autoencoder_model.h5",
@@ -29,12 +31,21 @@ def process_image_with_autoencoder(img_path):
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     if img is None:
         return None
+
     img_resized = cv2.resize(img, (128, 128)) / 255.0
     img_input = np.expand_dims(img_resized, axis=(0, -1))
-    reconstructed = autoencoder.predict(img_input, verbose=0)[0]
-    reconstructed = (reconstructed * 255).astype(np.uint8)
-    _, thresh = cv2.threshold(reconstructed, 127, 255, cv2.THRESH_BINARY)
-    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    reconstructed = autoencoder.predict(img_input, verbose=0)[0].squeeze()
+
+    # Compute reconstruction difference (this highlights damage)
+    diff = np.abs(img_resized - reconstructed)
+
+    # Scale back to 0–255
+    diff_uint8 = (diff * 255).astype(np.uint8)
+
+    # Use adaptive or Otsu thresholding for more sensitivity
+    _, thresh = cv2.threshold(diff_uint8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     return calculate_damage_score(contours)
 
 # Analyze damaged images

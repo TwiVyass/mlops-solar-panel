@@ -1,0 +1,30 @@
+schema: '2.0'
+stages:
+  analyze_damage:
+    cmd: python script/analyze_damage.py
+    deps:
+    - path: data/raw/Faulty_solar_panel/Physical-Damage
+      hash: md5
+      md5: d4a45829b225b19084b9572d1869d1a4.dir
+      size: 43211537
+      nfiles: 138
+    - path: models/autoencoder_model.h5
+      hash: md5
+      md5: 9fb005ffa1b9b112f43e7c542e55c586
+      size: 25871736
+    - path: script/analyze_damage.py
+      hash: md5
+      md5: 8b6137e4b83f8ea3dc5de083bbe5ea2f
+      size: 2673
+    outs:
+    - path: results/major_minor_scores.json
+      hash: md5
+      md5: 854e49a529acc465a20dd50e1196dfa1
+      size: 3219
+  evaluate_threshold:
+    cmd: python script/evaluate_threshold.py
+    deps:
+    - path: script/evaluate_threshold.py
+      hash: md5
+      md5: d72520b7c1e86fb1dcf5800161b88c4e
+      size: 1960

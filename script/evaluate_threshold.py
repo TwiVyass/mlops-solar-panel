@@ -22,7 +22,7 @@ def evaluate_threshold(major_scores, minor_scores, alpha=0.05, save_dir="results
     print(interpretation)
 
     # save numeric results
-    with open(f"{save_dir}/metrics/threshold_eval.json", "w") as f:
+    with open(f"{save_dir}/major_minor_scores.json", "w") as f:
         json.dump({"t_stat": t_stat, "p_value": p_value, "alpha": alpha}, f, indent=2)
 
     # histograms
@@ -41,3 +41,13 @@ def evaluate_threshold(major_scores, minor_scores, alpha=0.05, save_dir="results
     plt.savefig(f"{save_dir}/figures/boxplot.png")
 
     print("📊 Results saved to results/metrics and results/figures.")
+
+if __name__ == "__main__":
+    with open("results/major_minor_scores.json", "r") as f:
+        data = json.load(f)
+
+    major_scores = data.get("major", [])
+    minor_scores = data.get("minor", [])
+
+    evaluate_threshold(major_scores, minor_scores)
+
