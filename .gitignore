@@ -19,11 +19,9 @@ pyvenv.cfg
 # -------------------
 # Data and Results
 # -------------------
-data/raw/
-data/processed/
+
 data/interim/
 results/
-models/
 *.zip
 *.tar
 *.tar.gz
